@@ -1,0 +1,373 @@
+
+<style>
+  .dash { padding: 0.5rem 0 1.5rem; }
+  .report-hdr { border-bottom: 1.5px solid var(--color-border-secondary); padding-bottom: 0.6rem; margin-bottom: 1rem; }
+  .report-title { font-size: 16px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 2px; }
+  .report-sub { font-size: 11px; color: var(--color-text-secondary); }
+  .sec { margin-bottom: 1.4rem; }
+  .sec-lbl { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; color: var(--color-text-secondary); margin-bottom: 8px; border-left: 3px solid var(--color-border-secondary); padding-left: 8px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .box { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.85rem 1rem; }
+  .box h4 { font-size: 12px; font-weight: 500; margin: 0 0 10px; color: var(--color-text-primary); }
+  .note { font-size: 10px; color: var(--color-text-tertiary); margin-top: 6px; line-height: 1.5; }
+  .kpi-row { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; margin-bottom: 14px; }
+  .kpi { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.7rem 0.8rem; border-top: 3px solid var(--color-border-tertiary); }
+  .kpi.up   { border-top-color: #A32D2D; }
+  .kpi.dn   { border-top-color: #3B6D11; }
+  .kpi.neu  { border-top-color: #185FA5; }
+  .kpi.warn { border-top-color: #BA7517; }
+  .kpi-lbl  { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 2px; }
+  .kpi-val  { font-size: 19px; font-weight: 500; line-height: 1; color: var(--color-text-primary); }
+  .kpi-sub  { font-size: 10px; color: var(--color-text-tertiary); margin-top: 2px; }
+  .trend-badge { display: inline-block; font-size: 10px; font-weight: 500; padding: 1px 6px; border-radius: 8px; margin-top: 3px; }
+  .trend-up   { background: #FCEBEB; color: #791F1F; }
+  .trend-dn   { background: #EAF3DE; color: #27500A; }
+  .trend-flat { background: #E6F1FB; color: #0C447C; }
+  .yr-dot-row { display: flex; gap: 8px; align-items: center; font-size: 11px; margin-bottom: 4px; }
+  .yr-lbl { min-width: 32px; color: var(--color-text-secondary); font-weight: 500; }
+  .dot-track { display: flex; gap: 3px; flex: 1; align-items: center; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .bug-legend { display: flex; flex-wrap: wrap; gap: 8px; font-size: 10px; color: var(--color-text-secondary); margin-bottom: 8px; }
+  .bug-legend span { display: flex; align-items: center; gap: 3px; }
+  .bug-legend i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+  .bar-row { display: flex; align-items: center; gap: 8px; font-size: 11px; margin-bottom: 4px; }
+  .bar-lbl { min-width: 90px; color: var(--color-text-secondary); font-size: 10px; text-align: right; white-space: nowrap; }
+  .bar-track { flex: 1; height: 13px; background: var(--color-background-primary); border-radius: 2px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 2px; transition: width .3s; }
+  .bar-num { min-width: 28px; font-size: 10px; color: var(--color-text-secondary); }
+  .cmp-row { display: flex; gap: 4px; align-items: center; font-size: 11px; margin-bottom: 3px; }
+  .cmp-lbl { min-width: 80px; font-size: 10px; color: var(--color-text-secondary); text-align:right; }
+  .cmp-bars { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .cmp-seg { height: 9px; border-radius: 2px; }
+  .cmp-vals { font-size: 10px; color: var(--color-text-tertiary); min-width: 60px; }
+</style>
+
+<div class="dash">
+<div class="report-hdr">
+  <div class="report-title">腹膜炎發生率與菌種品質趨勢分析（2021–2025）</div>
+  <div class="report-sub">依 ISPD 2022 指引指標 ｜ 對照前5年（2016–2020）｜ 納入 2011 年後開始透析患者</div>
+</div>
+
+<!-- KPI row -->
+<div class="kpi-row">
+  <div class="kpi neu">
+    <div class="kpi-lbl">近5年發生率</div>
+    <div class="kpi-val">1.114</div>
+    <div class="kpi-sub">ep / 100 人月</div>
+    <div class="trend-badge trend-up">▲ vs 前5年 1.034</div>
+  </div>
+  <div class="kpi dn">
+    <div class="kpi-lbl">近5年最低（2023）</div>
+    <div class="kpi-val">0.905</div>
+    <div class="kpi-sub">ep / 100 人月</div>
+    <div class="trend-badge trend-dn">近年谷底</div>
+  </div>
+  <div class="kpi up">
+    <div class="kpi-lbl">近5年最高（2024）</div>
+    <div class="kpi-val">1.263</div>
+    <div class="kpi-sub">ep / 100 人月</div>
+    <div class="trend-badge trend-up">近年峰值</div>
+  </div>
+  <div class="kpi warn">
+    <div class="kpi-lbl">陰性培養率（近5年均）</div>
+    <div class="kpi-val">15.5%</div>
+    <div class="kpi-sub">超 ISPD &lt;15% 目標</div>
+    <div class="trend-badge trend-up">⚠ 2021: 30.4%</div>
+  </div>
+  <div class="kpi dn">
+    <div class="kpi-lbl">G(+) 菌比例（近5年）</div>
+    <div class="kpi-val">52%</div>
+    <div class="kpi-sub">G(−) 29% ｜ 陰培 16%</div>
+    <div class="trend-badge trend-dn">G(+) 持續主導</div>
+  </div>
+</div>
+
+<!-- 發生率趨勢 + 前後5年比較 -->
+<div class="sec">
+  <div class="sec-lbl">發生率趨勢</div>
+  <div class="grid2">
+    <div class="box">
+      <h4>逐年發生率（ep/100人月）— 近5年與參考基線</h4>
+      <div style="position:relative;height:180px"><canvas id="rateChart"></canvas></div>
+      <div class="note">
+        灰虛線 = 前5年均值（1.034）；藍虛線 = 近5年均值（1.114）；橘虛線 = ISPD ep/pt-yr 換算基線（0.40 ep/yr ≈ 3.33/100pm）。<br>
+        近5年整體發生率略高於前5年，但仍遠低於 ISPD 目標上限。2023 年為全段最低點（0.905）；2024 年回升至 1.263 為近5年峰值。
+      </div>
+    </div>
+    <div class="box">
+      <h4>前5年（2016–2020）vs 近5年（2021–2025）發生率對比</h4>
+      <div style="position:relative;height:180px"><canvas id="cmpRateChart"></canvas></div>
+      <div class="note">
+        前5年（79 事件 / 7,642 人月）vs 近5年（106 事件 / 9,519 人月）。<br>
+        近5年事件數多 34%，但分母人月亦增 25%；發生率僅升 0.080/100pm（+7.7%），差異不顯著。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 菌種大類趨勢 -->
+<div class="sec">
+  <div class="sec-lbl">致病菌大類趨勢</div>
+  <div class="grid2">
+    <div class="box">
+      <h4>菌種大類逐年分布（堆疊 %）</h4>
+      <div style="position:relative;height:180px"><canvas id="bugStackChart"></canvas></div>
+      <div class="note">
+        革蘭氏陽性菌每年佔 43–75%，為持續主導菌種。<br>
+        2025 年首次出現陽性菌與陰性菌「並列」（各 9 例，各 45%），陰性菌比重明顯上升，應持續監測。
+      </div>
+    </div>
+    <div class="box">
+      <h4>前5年 vs 近5年菌種大類比較</h4>
+      <div style="position:relative;height:180px"><canvas id="bugCmpChart"></canvas></div>
+      <div class="note">
+        近5年革蘭氏陽性菌比例從前5年 44% 升至 52%（+8%）。<br>
+        陰性培養從 12% 升至 16%（超 ISPD 15% 目標）。黴菌從 4% 降至 1%。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 陽性菌 + 陰性菌細類 -->
+<div class="sec">
+  <div class="sec-lbl">菌種細類品質監控</div>
+  <div class="grid2">
+    <div class="box">
+      <h4>革蘭氏陽性菌細類逐年（55 例）</h4>
+      <div id="pos-dot-chart"></div>
+      <div class="note">
+        S. aureus（16 例）為最常見陽性菌，每年均有出現，需持續評估操作衛生與出口感染關聯。<br>
+        S. epidermidis（9 例）以 2025 年最集中（4/9 例），Coagulase-negative Staph. 整體有增加趨勢。<br>
+        Streptococcus 類在 2021–2022 年偏多，2024–2025 年下降。
+      </div>
+    </div>
+    <div class="box">
+      <h4>革蘭氏陰性菌細類逐年（31 例）</h4>
+      <div id="neg-dot-chart"></div>
+      <div class="note">
+        E. coli（13 例）為近5年最常見陰性菌，2025 年激增至 5 例（佔陰性菌 56%）— 需評估腸道來源風險因子（低血鉀、便秘）。<br>
+        K. pneumoniae（6 例）及 Citrobacter（3 例）持續出現。2023 年出現 Pseudomonas aeruginosa（2 例），預後較差，需警惕。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 近5年細類排行 vs 前5年 -->
+<div class="sec">
+  <div class="sec-lbl">主要菌種細類：近5年 vs 前5年比較</div>
+  <div class="box">
+    <h4>前8名菌種細類對比（事件數）</h4>
+    <div id="species-cmp"></div>
+    <div class="note">
+      Other Streptococcus (+8例)、S. haemolyticus (+3例)、S. viridians (+5例) 在近5年明顯增加，提示接觸感染來源增加（口腔、皮膚）。<br>
+      E. coli 前5年 14 例 → 近5年 13 例，數量持平但分母人月增大（發生率實際下降）。<br>
+      K. pneumoniae 由 2 例升至 6 例（+200%），搭配 E. coli 持續出現，應評估腸道相關危險因子管理。
+    </div>
+  </div>
+</div>
+
+<div style="font-size:10px;color:var(--color-text-tertiary);border-top:0.5px solid var(--color-border-tertiary);padding-top:6px;margin-top:4px">
+  分析對象：開始透析日 ≥ 2011-01-01 之 490 位患者。近5年 = 腹膜炎發生日 2021–2025（106 次事件）；前5年 = 2016–2020（79 次事件）。發生率以實際在治人月計算。
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ── Rate trend ──
+const yrs5 = ['2021','2022','2023','2024','2025'];
+const rates100pm = [1.304, 1.080, 0.905, 1.263, 1.024];
+const rateEpPtYr = [0.156, 0.130, 0.109, 0.152, 0.123];
+const allYrs = ['2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'];
+const allRates = [0.825,1.493,1.635,1.767,1.265,1.269,0.994,0.857,0.898,1.198,1.304,1.080,0.905,1.263,1.024];
+
+new Chart(document.getElementById('rateChart'), {
+  data: {
+    labels: yrs5,
+    datasets: [
+      { type:'bar', data: rates100pm, backgroundColor: rates100pm.map(v=>v===Math.min(...rates100pm)?'rgba(59,109,17,0.35)':v===Math.max(...rates100pm)?'rgba(163,45,45,0.35)':'rgba(24,95,165,0.2)'),
+        borderColor: rates100pm.map(v=>v===Math.min(...rates100pm)?'#3B6D11':v===Math.max(...rates100pm)?'#A32D2D':'#185FA5'),
+        borderWidth:2, borderRadius:4, label:'ep/100人月' },
+      { type:'line', data:Array(5).fill(1.034), borderColor:'rgba(136,135,128,0.7)', borderDash:[4,3], borderWidth:1.5, pointRadius:0, fill:false, label:'前5年均值' },
+      { type:'line', data:Array(5).fill(1.114), borderColor:'rgba(24,95,165,0.7)', borderDash:[4,3], borderWidth:1.5, pointRadius:0, fill:false, label:'近5年均值' },
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: ctx=> ctx.datasetIndex===0?` ${ctx.parsed.y.toFixed(3)} ep/100pm`:` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(3)}` } } },
+    scales:{ y:{ min:0, max:1.8, ticks:{callback:v=>v.toFixed(2),font:{size:10}}, grid:{color:'rgba(128,128,128,0.1)'}, title:{display:true,text:'ep/100人月',font:{size:10}} }, x:{ticks:{font:{size:11}},grid:{display:false}} }
+  }
+});
+
+// ── Comparison bar ──
+new Chart(document.getElementById('cmpRateChart'), {
+  type:'bar',
+  data:{
+    labels:['2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'],
+    datasets:[{
+      data:[1.269,0.994,0.857,0.898,1.198,1.304,1.080,0.905,1.263,1.024],
+      backgroundColor:['rgba(136,135,128,0.3)','rgba(136,135,128,0.3)','rgba(136,135,128,0.3)','rgba(136,135,128,0.3)','rgba(136,135,128,0.3)',
+        'rgba(24,95,165,0.35)','rgba(24,95,165,0.25)','rgba(59,109,17,0.3)','rgba(163,45,45,0.3)','rgba(24,95,165,0.25)'],
+      borderColor:['#888780','#888780','#888780','#888780','#888780','#185FA5','#185FA5','#3B6D11','#A32D2D','#185FA5'],
+      borderWidth:1.5, borderRadius:3
+    }]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: ctx=> ` ${ctx.parsed.y.toFixed(3)} ep/100pm` } } },
+    scales:{ y:{ min:0, max:1.8, ticks:{callback:v=>v.toFixed(2),font:{size:10}}, grid:{color:'rgba(128,128,128,0.1)'} },
+      x:{ticks:{font:{size:10}},grid:{display:false}} }
+  }
+});
+
+// ── Bug stacked % ──
+const bugYrs = ['2021','2022','2023','2024','2025'];
+const bugPos = [10,10,12,14,9];
+const bugNeg = [5,7,3,7,9];
+const bugCult= [7,3,2,4,1];
+const bugOth = [1,1,0,0,1];
+const bugTot = bugYrs.map((_,i)=>bugPos[i]+bugNeg[i]+bugCult[i]+bugOth[i]);
+
+new Chart(document.getElementById('bugStackChart'), {
+  type:'bar',
+  data:{ labels: bugYrs,
+    datasets:[
+      { label:'G(+)', data: bugPos.map((v,i)=>+(v/bugTot[i]*100).toFixed(1)), backgroundColor:'rgba(24,95,165,0.75)', borderRadius:{topLeft:0,topRight:0} },
+      { label:'G(−)', data: bugNeg.map((v,i)=>+(v/bugTot[i]*100).toFixed(1)), backgroundColor:'rgba(29,158,117,0.75)' },
+      { label:'陰培', data: bugCult.map((v,i)=>+(v/bugTot[i]*100).toFixed(1)), backgroundColor:'rgba(136,135,128,0.7)' },
+      { label:'其他/黴', data: bugOth.map((v,i)=>+(v/bugTot[i]*100).toFixed(1)), backgroundColor:'rgba(163,45,45,0.6)', borderRadius:{topLeft:3,topRight:3} },
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false, indexAxis:'x',
+    plugins:{ legend:{ position:'bottom', labels:{font:{size:10},boxWidth:10,padding:8} },
+      tooltip:{ callbacks:{ label: ctx=> ` ${ctx.dataset.label}: ${ctx.parsed.y}%` } } },
+    scales:{ x:{stacked:true,ticks:{font:{size:11}},grid:{display:false}},
+      y:{stacked:true, max:100, ticks:{callback:v=>v+'%',font:{size:10}}, grid:{color:'rgba(128,128,128,0.1)'}} }
+  }
+});
+
+// ── Bug comparison doughnut ──
+new Chart(document.getElementById('bugCmpChart'), {
+  type:'bar',
+  data:{ labels:['G(+) 陽性菌','G(−) 陰性菌','陰性培養','黴菌/其他'],
+    datasets:[
+      { label:'前5年 (n=79)', data:[40.5,34.2,11.4,5.1], backgroundColor:'rgba(136,135,128,0.4)', borderColor:'#888780', borderWidth:1.5, borderRadius:3 },
+      { label:'近5年 (n=106)', data:[51.9,29.2,16.0,1.9], backgroundColor:'rgba(24,95,165,0.35)', borderColor:'#185FA5', borderWidth:1.5, borderRadius:3 },
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ position:'bottom', labels:{font:{size:10},boxWidth:10,padding:8} },
+      tooltip:{ callbacks:{ label: ctx=> ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}%` } } },
+    scales:{ y:{ max:60, ticks:{callback:v=>v+'%',font:{size:10}}, grid:{color:'rgba(128,128,128,0.1)'} },
+      x:{ticks:{font:{size:10}},grid:{display:false}} }
+  }
+});
+
+// ── Dot chart: positive ──
+const posSpecies = {
+  'S. aureus':       [3,4,4,2,3],
+  'S. epidermidis':  [1,1,0,3,4],
+  'S. haemolyticus': [0,0,1,3,1],
+  'Other Staph.':    [1,1,1,3,0],
+  'Strep. (other)':  [5,3,2,0,1],
+  'S. viridians':    [0,0,2,3,0],
+  'Enterococcus':    [0,1,2,0,0],
+};
+const negSpecies = {
+  'E. coli':         [1,3,1,3,5],
+  'K. pneumoniae':   [2,1,0,1,2],
+  'Citrobacter':     [0,1,0,1,1],
+  'Serratia':        [1,0,0,1,0],
+  'Pseudomonas':     [0,0,2,0,0],
+  'Enterobacter':    [0,0,0,0,1],
+  'Others G(−)':     [1,2,0,1,0],
+};
+
+function makeDotChart(container, species, yrs) {
+  const colors = ['#185FA5','#1D9E75','#BA7517','#A32D2D','#534AB7','#D85A30','#888780'];
+  Object.entries(species).forEach(([name, vals], si) => {
+    const row = document.createElement('div');
+    row.className = 'yr-dot-row';
+    row.innerHTML = `<span class="yr-lbl" style="font-size:10px;min-width:96px;text-align:right">${name}</span>`;
+    const track = document.createElement('div');
+    track.className = 'dot-track';
+    yrs.forEach((yr,yi) => {
+      const n = vals[yi];
+      for(let i=0;i<n;i++){
+        const d = document.createElement('div');
+        d.className = 'dot';
+        d.style.background = colors[si];
+        d.style.opacity = 0.8;
+        d.title = `${yr}: ${n} 例`;
+        track.appendChild(d);
+      }
+      if(yi<yrs.length-1){
+        const sep = document.createElement('div');
+        sep.style.cssText = 'width:1px;height:12px;background:var(--color-border-tertiary);margin:0 2px;flex-shrink:0';
+        track.appendChild(sep);
+      }
+    });
+    const total = document.createElement('span');
+    total.style.cssText = 'font-size:10px;color:var(--color-text-secondary);min-width:24px';
+    total.textContent = 'n='+vals.reduce((a,b)=>a+b,0);
+    row.appendChild(track);
+    row.appendChild(total);
+    container.appendChild(row);
+  });
+  // year header
+  const hdr = document.createElement('div');
+  hdr.className = 'yr-dot-row';
+  hdr.style.marginBottom='8px';
+  hdr.innerHTML = `<span style="min-width:96px;font-size:10px;text-align:right;color:var(--color-text-tertiary)">菌種</span>`;
+  const htrack = document.createElement('div');
+  htrack.className = 'dot-track';
+  yrs.forEach((yr,yi)=>{
+    const s = document.createElement('span');
+    s.style.cssText='font-size:10px;color:var(--color-text-secondary);font-weight:500;min-width:20px;text-align:center';
+    s.textContent=yr;
+    htrack.appendChild(s);
+    if(yi<yrs.length-1){
+      const g=document.createElement('div');
+      g.style.cssText='width:1px;height:10px;background:transparent;margin:0 2px';
+      htrack.appendChild(g);
+    }
+  });
+  hdr.appendChild(htrack);
+  container.insertBefore(hdr, container.firstChild);
+}
+makeDotChart(document.getElementById('pos-dot-chart'), posSpecies, yrs5);
+makeDotChart(document.getElementById('neg-dot-chart'), negSpecies, yrs5);
+
+// ── Species comparison bar ──
+const speciesCmpData = [
+  { name:'S. aureus',         prev:8, curr:16, color:'#185FA5' },
+  { name:'E. coli',           prev:14, curr:13, color:'#1D9E75' },
+  { name:'No growth',         prev:9, curr:17, color:'#888780' },
+  { name:'Other Strep.',      prev:3, curr:11, color:'#534AB7' },
+  { name:'S. epidermidis',    prev:6, curr:9,  color:'#378ADD' },
+  { name:'K. pneumoniae',     prev:2, curr:6,  color:'#D85A30' },
+  { name:'S. viridians',      prev:0, curr:5,  color:'#5DCAA5' },
+  { name:'S. haemolyticus',   prev:2, curr:5,  color:'#EF9F27' },
+];
+const cmpEl = document.getElementById('species-cmp');
+const maxV = 17;
+speciesCmpData.forEach(d => {
+  const diff = d.curr - d.prev;
+  const diffStr = diff>0?`▲${diff}`:diff<0?`▼${Math.abs(diff)}`:'—';
+  const diffCls = diff>0?'color:#A32D2D':diff<0?'color:#3B6D11':'color:#888';
+  cmpEl.innerHTML += `<div class="bar-row">
+    <span class="bar-lbl">${d.name}</span>
+    <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+      <div style="display:flex;align-items:center;gap:4px">
+        <div style="width:36px;font-size:9px;color:var(--color-text-tertiary);text-align:right">前5年</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${d.prev/maxV*100}%;background:rgba(136,135,128,0.5)"></div></div>
+        <span style="font-size:10px;color:var(--color-text-secondary);min-width:20px">${d.prev}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:4px">
+        <div style="width:36px;font-size:9px;color:var(--color-text-tertiary);text-align:right">近5年</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${d.curr/maxV*100}%;background:${d.color}88;border:1px solid ${d.color}"></div></div>
+        <span style="font-size:10px;color:var(--color-text-secondary);min-width:20px">${d.curr}</span>
+        <span style="font-size:10px;${diffCls};font-weight:500;min-width:28px">${diffStr}</span>
+      </div>
+    </div>
+  </div>`;
+});
+</script>
