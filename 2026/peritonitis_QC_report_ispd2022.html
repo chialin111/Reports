@@ -1,0 +1,382 @@
+
+<style>
+  .page{padding:.5rem 0 1.5rem;font-size:13px}
+  .rpt-hdr{border-bottom:2px solid var(--color-border-secondary);padding-bottom:.75rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:8px}
+  .rpt-title{font-size:17px;font-weight:500;color:var(--color-text-primary);margin:0 0 3px}
+  .rpt-sub{font-size:11px;color:var(--color-text-secondary)}
+  .rpt-date{font-size:11px;color:var(--color-text-tertiary);text-align:right}
+  .sec{margin-bottom:1.5rem}
+  .slbl{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--color-text-secondary);margin-bottom:8px;border-left:3px solid var(--color-border-secondary);padding-left:8px}
+  .g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+  .g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+  .box{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.85rem 1rem}
+  .box h4{font-size:12px;font-weight:500;margin:0 0 10px;color:var(--color-text-primary)}
+  .kpi{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem .9rem;border-top:3px solid transparent}
+  .kpi.pass{border-top-color:#3B6D11}.kpi.warn{border-top-color:#BA7517}.kpi.fail{border-top-color:#A32D2D}.kpi.info{border-top-color:#185FA5}
+  .kl{font-size:11px;color:var(--color-text-secondary);margin-bottom:2px}
+  .kv{font-size:21px;font-weight:500;line-height:1;color:var(--color-text-primary)}
+  .kv.g{color:#3B6D11}.kv.a{color:#BA7517}.kv.r{color:#A32D2D}.kv.b{color:#185FA5}
+  .ks{font-size:10px;color:var(--color-text-tertiary);margin-top:2px}
+  .bd{display:inline-block;font-size:10px;font-weight:500;padding:1px 7px;border-radius:8px;margin-top:4px}
+  .bp{background:#EAF3DE;color:#27500A}.bw{background:#FAEEDA;color:#412402}.bf{background:#FCEBEB;color:#501313}.bi{background:#E6F1FB;color:#042C53}
+  .tbl{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}
+  .tbl th{text-align:right;padding:4px 6px;color:var(--color-text-secondary);border-bottom:.5px solid var(--color-border-secondary);font-weight:500;white-space:nowrap;font-size:10px}
+  .tbl th:first-child{text-align:left}
+  .tbl td{text-align:right;padding:3px 6px;border-bottom:.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+  .tbl td:first-child{text-align:left;font-weight:500}
+  .tbl tr.best td{background:rgba(59,109,17,.06)}
+  .tbl tr.worst td{background:rgba(163,45,45,.05)}
+  .tbl tr.total td{background:rgba(24,95,165,.06);font-weight:500}
+  .tbl tr.qbest td{background:rgba(59,109,17,.05)}
+  .pc{color:#3B6D11;font-weight:500}.wc{color:#BA7517;font-weight:500}.rc{color:#A32D2D;font-weight:500}.ic{color:#185FA5}
+  .note{font-size:10px;color:var(--color-text-tertiary);margin-top:7px;line-height:1.55}
+  .ispd-ref-bar{display:flex;flex-wrap:wrap;gap:16px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.6rem 1rem;margin-bottom:14px;font-size:11px;align-items:center}
+  .ispd-item{display:flex;align-items:center;gap:6px}
+  .ispd-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+  .bar-row{display:flex;align-items:center;gap:8px;font-size:11px;margin-bottom:4px}
+  .bar-lbl{color:var(--color-text-secondary);min-width:80px;text-align:right;font-size:10px;white-space:nowrap}
+  .bar-track{flex:1;height:13px;background:var(--color-background-primary);border-radius:2px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:2px}
+  .bar-num{font-size:10px;color:var(--color-text-secondary);min-width:28px}
+  .ep-badge{display:inline-block;font-size:10px;padding:1px 6px;border-radius:10px;margin:1px}
+  .foot{font-size:10px;color:var(--color-text-tertiary);border-top:.5px solid var(--color-border-tertiary);padding-top:8px;margin-top:4px;line-height:1.6}
+</style>
+
+<div class="page">
+
+<div class="rpt-hdr">
+  <div>
+    <div class="rpt-title">腹膜透析腹膜炎品質監控報告</div>
+    <div class="rpt-sub">依據 ISPD 2022 Peritonitis Guideline（Li et al., PDI 2022;42:110–153）｜ 報告期間：2021–2025 年</div>
+  </div>
+  <div class="rpt-date">納入族群：開始透析日 ≥ 2011-01-01<br>分析患者：490 人　事件：106 次（近5年）</div>
+</div>
+
+<div class="ispd-ref-bar">
+  <span style="font-weight:500;color:var(--color-text-primary);font-size:12px">ISPD 2022 閾值</span>
+  <div class="ispd-item"><div class="ispd-dot" style="background:#A32D2D"></div><span>整體發生率 &lt;0.40 ep/pt-yr（1C）</span></div>
+  <div class="ispd-item"><div class="ispd-dot" style="background:#3B6D11"></div><span>無腹膜炎患者 &gt;80%/年</span></div>
+  <div class="ispd-item"><div class="ispd-dot" style="background:#BA7517"></div><span>培養陰性率 &lt;15%（1C）</span></div>
+  <div class="ispd-item"><div class="ispd-dot" style="background:#185FA5"></div><span>腹膜炎相關死亡（監測）</span></div>
+  <div class="ispd-item"><div class="ispd-dot" style="background:#534AB7"></div><span>Relapsing/Recurrent/Repeat（監測）</span></div>
+</div>
+
+<!-- ① KPI 摘要 -->
+<div class="g4">
+  <div class="kpi pass"><div class="kl">整體發生率（近5年）</div><div class="kv g">0.133</div><div class="ks">ep/pt-yr｜目標 &lt;0.40</div><div class="bd bp">✓ 達標：目標值 33%</div></div>
+  <div class="kpi pass"><div class="kl">無腹膜炎患者比例</div><div class="kv g">89.5%</div><div class="ks">各年均值｜目標 &gt;80%</div><div class="bd bp">✓ 各年全數達標</div></div>
+  <div class="kpi warn"><div class="kl">培養陰性率（有培養者）</div><div class="kv a">16.2%</div><div class="ks">17/105｜目標 &lt;15%</div><div class="bd bw">⚠ 微超，2025 降至 5%</div></div>
+  <div class="kpi pass"><div class="kl">腹膜炎相關死亡</div><div class="kv g">0 例</div><div class="ks">近5年｜全時期 8 例</div><div class="bd bp">✓ 近5年顯著改善</div></div>
+</div>
+<div class="g4">
+  <div class="kpi info"><div class="kl">Relapsing（28天同菌）</div><div class="kv b">5 次</div><div class="ks">4.7% of 106 episodes</div><div class="bd bi">ISPD 定義監測</div></div>
+  <div class="kpi info"><div class="kl">Recurrent（28天異菌）</div><div class="kv b">1 次</div><div class="ks">0.9%</div><div class="bd bi">ISPD 定義監測</div></div>
+  <div class="kpi info"><div class="kl">Repeat（>28天同菌）</div><div class="kv b">9 次</div><div class="ks">8.5%</div><div class="bd bi">ISPD 定義監測</div></div>
+  <div class="kpi warn"><div class="kl">首次腹膜炎平均時距</div><div class="kv">30.0 月</div><div class="ks">中位數 23.7 月</div><div class="bd bw">ISPD 建議追蹤</div></div>
+</div>
+
+<!-- ② 年度指標表 + 發生率趨勢 -->
+<div class="sec">
+  <div class="slbl">年度 ISPD 指標對照（ISPD Table 2 格式）</div>
+  <div class="g2">
+    <div class="box">
+      <h4>逐年核心指標（2021–2025）</h4>
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th style="width:48px;text-align:left">年度</th>
+            <th style="width:32px">事件</th>
+            <th style="width:52px">暴露<br>人年</th>
+            <th style="width:56px">ep/pt-yr</th>
+            <th style="width:36px">達標</th>
+            <th style="width:52px">無感染<br>患者%</th>
+            <th style="width:36px">達標</th>
+            <th style="width:50px">培養<br>陰性率</th>
+            <th style="width:36px">達標</th>
+            <th style="width:40px">治癒<br>率</th>
+            <th style="width:36px">轉HD</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="worst"><td>2021</td><td>23</td><td>147.0</td><td class="wc">0.156</td><td>✓</td><td>88.8%</td><td>✓</td><td class="rc">31.8%</td><td>✗</td><td>74%</td><td>6</td></tr>
+          <tr><td>2022</td><td>21</td><td>162.0</td><td class="pc">0.130</td><td>✓</td><td>90.2%</td><td>✓</td><td class="pc">14.3%</td><td>✓</td><td>76%</td><td>5</td></tr>
+          <tr class="best"><td>2023</td><td>17</td><td>156.5</td><td class="pc">0.109</td><td>✓</td><td class="pc">91.8%</td><td>✓</td><td class="pc">11.8%</td><td>✓</td><td>71%</td><td>5</td></tr>
+          <tr><td>2024</td><td>25</td><td>164.9</td><td class="wc">0.152</td><td>✓</td><td>88.6%</td><td>✓</td><td class="wc">16.0%</td><td>✗</td><td class="pc">92%</td><td>1</td></tr>
+          <tr><td>2025</td><td>20</td><td>162.8</td><td class="pc">0.123</td><td>✓</td><td>89.1%</td><td>✓</td><td class="pc">5.0%</td><td>✓</td><td>70%</td><td>6</td></tr>
+          <tr class="total"><td>近5年</td><td>106</td><td>793.2</td><td class="pc">0.133</td><td>✓</td><td>—</td><td>—</td><td class="wc">16.2%</td><td>⚠</td><td class="pc">77.4%</td><td>23</td></tr>
+        </tbody>
+      </table>
+      <div class="note">綠底 = 2023 年品質最佳；紅底 = 2021 年培養陰性率偏高。暴露人年 = 每位患者實際在治日數加總 ÷ 365.25。</div>
+    </div>
+    <div class="box">
+      <h4>發生率趨勢：ep/pt-yr 與 ep/100人月</h4>
+      <div style="position:relative;height:195px"><canvas id="rateChart"></canvas></div>
+      <div style="display:flex;gap:14px;margin-top:5px;font-size:10px;color:var(--color-text-secondary)">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#185FA5;opacity:.7"></span>ep/100人月（左軸）</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:3px;background:#3B6D11;display:inline-block"></span>ep/pt-yr（右軸）</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:16px;height:2px;border-top:2px dashed #A32D2D;display:inline-block"></span>ISPD 0.40 上限</span>
+      </div>
+      <div class="note">所有年度均大幅低於 ISPD 閾值。2023 年為近5年谷底（0.109 ep/pt-yr）；2025 年回落至第二低（0.123）。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ③ 逐季指標 -->
+<div class="sec">
+  <div class="slbl">逐季指標（2021 Q1 – 2025 Q4）｜ISPD 建議每季於單位層級報告</div>
+  <div class="g2">
+    <div class="box">
+      <h4>季度發生率（ep/100人月）</h4>
+      <div style="position:relative;height:185px"><canvas id="qtrChart"></canvas></div>
+      <div class="note">2023 Q4 最低（0.208/100pm，1件）；2021 Q3 最高（1.557/100pm，7件）。無固定季節規律，提示感染以個案隨機發生為主。</div>
+    </div>
+    <div class="box">
+      <h4>逐季明細表（含 ISPD 達標標記）</h4>
+      <div style="overflow-x:auto;max-height:210px;overflow-y:auto">
+      <table class="tbl">
+        <thead style="position:sticky;top:0;background:var(--color-background-secondary)">
+          <tr>
+            <th style="width:52px;text-align:left">季度</th>
+            <th style="width:28px">事件</th>
+            <th style="width:48px">在治</th>
+            <th style="width:62px">ep/100pm</th>
+            <th style="width:60px">ep/yr<br>年化</th>
+            <th style="width:36px">達標</th>
+            <th style="width:52px">無感<br>染%</th>
+            <th style="width:50px">陰培<br>率%</th>
+            <th style="width:36px">達標</th>
+            <th style="width:36px">治癒</th>
+            <th style="width:32px">HD</th>
+          </tr>
+        </thead>
+        <tbody id="qtbl"></tbody>
+      </table>
+      </div>
+      <div class="note">ep/yr 年化 = 季度 ep/pt-yr × 4，供與 ISPD 年度閾值（0.40）比較。單季事件少（1–7件），建議以年度數值為主要決策依據。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ④ 培養分析 + 菌種 -->
+<div class="sec">
+  <div class="slbl">培養品質監控與菌種分布（ISPD 1C：培養陰性率 &lt;15%）</div>
+  <div class="g3">
+    <div class="box">
+      <h4>近5年培養陰性率逐年（有培養者中）</h4>
+      <div style="position:relative;height:175px"><canvas id="negChart"></canvas></div>
+      <div class="note">培養執行率：2022–2025 年均達 100%。2021 年陰性率 31.8% 為監測期高峰，可能與抗生素先行投予或 COVID-19 就醫延誤有關。</div>
+    </div>
+    <div class="box">
+      <h4>菌種大類逐年分布（近5年，n=106）</h4>
+      <div style="position:relative;height:175px"><canvas id="bugChart"></canvas></div>
+      <div class="note">G(+) 持續主導（52%）；2025 年首次 G(+)/G(−) 並列（各9例），G(−) 比重上升值得持續監測。</div>
+    </div>
+    <div class="box">
+      <h4>主要菌種細類（近5年陽性 88 例）</h4>
+      <div id="bugBars"></div>
+      <div class="note">S. aureus（16例）為最常見可培養菌；E. coli（13例）居 G(−) 首位，2025 年單年 5 例為監測期高峰。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ⑤ 治療結果 + Episode 分類 -->
+<div class="sec">
+  <div class="slbl">治療結果與 ISPD 2022 Episode 分類（Table 1）</div>
+  <div class="g2">
+    <div class="box">
+      <h4>治療結果逐年（ISPD 定義）</h4>
+      <div style="position:relative;height:180px"><canvas id="outcomeChart"></canvas></div>
+      <div style="display:flex;gap:12px;margin-top:5px;font-size:10px;color:var(--color-text-secondary)">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:rgba(59,109,17,.75)"></span>Medical cure（治癒）</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:rgba(186,117,23,.75)"></span>HD transfer（轉血液透析）</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:rgba(163,45,45,.65)"></span>Catheter removal / 死亡</span>
+      </div>
+      <div class="note">2024 年治癒率 92%（近5年最佳）；2025 年轉HD率升至 30%（6例），為近5年最高，需追蹤根因。近5年零腹膜炎相關死亡。</div>
+    </div>
+    <div class="box">
+      <h4>ISPD 2022 Episode 分類（近5年 106 次）</h4>
+      <div style="margin-bottom:12px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div class="bar-row"><span class="bar-lbl">Initial（初發）</span><div class="bar-track"><div class="bar-fill" style="width:71.7%;background:#185FA5cc"></div></div><span class="bar-num">76</span><span style="font-size:10px;color:var(--color-text-tertiary)">71.7%</span></div>
+          <div class="bar-row"><span class="bar-lbl">New episode（新發）</span><div class="bar-track"><div class="bar-fill" style="width:14.2%;background:#5DCAA5cc"></div></div><span class="bar-num">15</span><span style="font-size:10px;color:var(--color-text-tertiary)">14.2%</span></div>
+          <div class="bar-row"><span class="bar-lbl">Repeat（>28天同菌）</span><div class="bar-track"><div class="bar-fill" style="width:8.5%;background:#EF9F27cc"></div></div><span class="bar-num">9</span><span style="font-size:10px;color:var(--color-text-tertiary)">8.5%</span></div>
+          <div class="bar-row"><span class="bar-lbl">Relapsing（≤28天同菌）</span><div class="bar-track"><div class="bar-fill" style="width:4.7%;background:#A32D2Dcc"></div></div><span class="bar-num">5</span><span style="font-size:10px;color:var(--color-text-tertiary)">4.7%</span></div>
+          <div class="bar-row"><span class="bar-lbl">Recurrent（≤28天異菌）</span><div class="bar-track"><div class="bar-fill" style="width:0.9%;background:#534AB7cc"></div></div><span class="bar-num">1</span><span style="font-size:10px;color:var(--color-text-tertiary)">0.9%</span></div>
+        </div>
+      </div>
+      <div style="background:var(--color-background-primary);border-radius:6px;padding:8px 10px;font-size:10px">
+        <div style="font-weight:500;color:var(--color-text-primary);margin-bottom:5px">需特別追蹤案例（ISPD 建議考慮拔管重植）</div>
+        <div style="color:var(--color-text-secondary);line-height:1.7">
+          Relapsing 5 次：S. aureus（3次，2位患者）、No growth（1次）、other（1次）<br>
+          Repeat 9 次：S. haemolyticus 同一患者 2 次（2024 Q3/Q4），其餘多為 Strep. 或 CoNS<br>
+          Recurrent 1 次：2025 Q1，E. coli，治療結果為轉HD
+        </div>
+      </div>
+      <div class="note">ISPD Table 1 定義：Relapsing = 停藥 ≤28 天同菌復發；Recurrent = 停藥 ≤28 天異菌；Repeat = 停藥 >28 天同菌。三類均建議考慮及時拔管（1C）。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ⑥ 行動建議 -->
+<div class="sec">
+  <div class="slbl">品質改善建議（依 ISPD 2022 分級）</div>
+  <div class="box">
+    <table class="tbl" style="font-size:11px">
+      <thead>
+        <tr>
+          <th style="text-align:left;width:18%">ISPD 指標</th>
+          <th style="text-align:left;width:10%">目標</th>
+          <th style="text-align:left;width:15%">現況</th>
+          <th style="text-align:left;width:9%">狀態</th>
+          <th style="text-align:left;width:10%">證據等級</th>
+          <th style="text-align:left;width:38%">建議行動</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>整體腹膜炎發生率</td><td>&lt;0.40 ep/pt-yr</td><td>0.133（近5年）</td><td><span class="bd bp">✓ 達標</span></td><td>1C</td><td>持續年度 CQI 追蹤；維持現有訓練與衛教品質</td></tr>
+        <tr><td>無腹膜炎患者比例</td><td>&gt;80%/年</td><td>各年 88.6–91.8%</td><td><span class="bd bp">✓ 達標</span></td><td>2C</td><td>維持並每季於單位層級報告</td></tr>
+        <tr><td>培養陰性率</td><td>&lt;15%</td><td>16.2%（近5年均）<br>2021: 31.8% ✗ 2024: 16.0% ✗</td><td><span class="bd bw">⚠ 部分超標</span></td><td>1C / 2C</td><td>確認培養採集流程：採用血液培養瓶床邊接種（5–10 mL）或 50 mL 離心濃縮法；確認是否有抗生素先於培養投予之情形；2021 年高陰性率請追溯個案病歷</td></tr>
+        <tr><td>腹膜炎相關死亡</td><td>監測追蹤</td><td>近5年 0 例<br>全時期 3.3%</td><td><span class="bd bp">✓ 改善</span></td><td>監測</td><td>依 ISPD 定義：發生後 30 天內或住院期間死亡；持續記錄與季度報告</td></tr>
+        <tr><td>Relapsing 腹膜炎<br>（停藥 ≤28 天同菌）</td><td>監測追蹤</td><td>近5年 5 次（4.7%）<br>S. aureus 佔 3 次</td><td><span class="bd bw">⚠ 需追蹤</span></td><td>1C</td><td>應考慮拔管；ISPD 建議確認 effluent WBC 趨勢；S. aureus relapsing 請評估出口感染及再訓練</td></tr>
+        <tr><td>Repeat 腹膜炎<br>（停藥 >28 天同菌）</td><td>監測追蹤</td><td>近5年 9 次（8.5%）<br>含同患者反覆感染</td><td><span class="bd bw">⚠ 需追蹤</span></td><td>1C</td><td>每個案例進行根因分析；重複感染（同一患者）建議評估同步拔管重植（effluent 陰性後）；加強操作技術再訓練</td></tr>
+        <tr><td>抗黴菌預防</td><td>每次抗生素療程同步投予</td><td>近5年 1 例黴菌感染（2025）</td><td><span class="bd bw">⚠ 確認規範</span></td><td>1B</td><td>確認每次腹膜炎治療均同步使用 Nystatin 500,000 IU qid 或 Fluconazole 200 mg q48h</td></tr>
+        <tr><td>低血鉀管理</td><td>避免持續低血鉀</td><td>未系統記錄</td><td><span class="bd bw">⚠ 建議追蹤</span></td><td>2C</td><td>ISPD 2022 新增：持續 4 個月低血鉀者腹膜炎風險增 80%；建議系統性記錄血鉀並介入飲食衛教</td></tr>
+        <tr><td>再訓練機制</td><td>觸發指標明確</td><td>未記錄再訓練執行</td><td><span class="bd bw">⚠ 建議建立</span></td><td>1C</td><td>ISPD 明定觸發指標：腹膜炎後、住院後、設備更換後；建議每 2–3 個月家訪或技術評核（直接操作檢視）</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="foot">
+  資料來源：總表工作表（490 位患者）× Peritonitis 工作表（246 次事件全時期，近5年 106 次）。分析納入開始透析日 ≥ 2011-01-01 之患者。暴露人月以實際在治日數（開始透析日至退出日或期末）÷ 30.4375 計算；培養陰性率分母為有送培養之事件（排除欄位空白之未培養事件）。Episode 分類依 ISPD 2022 Table 1 定義（Relapsing：停藥 ≤28 天同菌；Recurrent：停藥 ≤28 天異菌；Repeat：停藥 >28 天同菌）。<br>
+  參考文獻：Li PKT et al. ISPD peritonitis guideline recommendations: 2022 update on prevention and treatment. Perit Dial Int. 2022;42(2):110–153.
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const yrs=['2021','2022','2023','2024','2025'];
+const rate100pm=[1.304,1.080,0.905,1.263,1.024];
+const ratePtYr=[0.156,0.130,0.109,0.152,0.123];
+
+new Chart(document.getElementById('rateChart'),{
+  data:{labels:yrs,datasets:[
+    {type:'bar',data:rate100pm,yAxisID:'y',
+      backgroundColor:rate100pm.map(v=>v===Math.min(...rate100pm)?'rgba(59,109,17,.45)':v===Math.max(...rate100pm)?'rgba(163,45,45,.35)':'rgba(24,95,165,.3)'),
+      borderColor:rate100pm.map(v=>v===Math.min(...rate100pm)?'#3B6D11':v===Math.max(...rate100pm)?'#A32D2D':'#185FA5'),
+      borderWidth:2,borderRadius:4,label:'ep/100人月'},
+    {type:'line',data:ratePtYr,yAxisID:'y2',borderColor:'#3B6D11',pointBackgroundColor:'#3B6D11',pointRadius:5,tension:.3,fill:false,label:'ep/pt-yr'},
+    {type:'line',data:Array(5).fill(0.40),yAxisID:'y2',borderColor:'rgba(163,45,45,.6)',borderDash:[5,4],borderWidth:1.5,pointRadius:0,fill:false}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+    scales:{y:{min:0,max:1.8,ticks:{callback:v=>v.toFixed(2),font:{size:10}},grid:{color:'rgba(128,128,128,.1)'},title:{display:true,text:'ep/100人月',font:{size:10}}},
+      y2:{position:'right',min:0,max:.5,ticks:{callback:v=>v.toFixed(2),font:{size:10}},grid:{display:false},title:{display:true,text:'ep/pt-yr',font:{size:10}}},
+      x:{ticks:{font:{size:11}},grid:{display:false}}}}
+});
+
+const qLabels=['21Q1','21Q2','21Q3','21Q4','22Q1','22Q2','22Q3','22Q4','23Q1','23Q2','23Q3','23Q4','24Q1','24Q2','24Q3','24Q4','25Q1','25Q2','25Q3','25Q4'];
+const q100=[1.220,1.196,1.557,1.271,1.267,1.027,1.018,1.049,1.125,1.501,0.848,0.208,1.253,1.219,1.196,1.429,0.817,1.401,1.039,0.857];
+const qData=[
+  {ev:5,act:152,pm:410,r100:1.220,rAnn:0.585,free:97.4,neg:40.0,cure:2,hd:3,yr:2021},
+  {ev:5,act:151,pm:418,r100:1.196,rAnn:0.574,free:96.7,neg:20.0,cure:4,hd:1,yr:2021},
+  {ev:7,act:157,pm:450,r100:1.557,rAnn:0.747,free:95.5,neg:50.0,cure:6,hd:1,yr:2021},
+  {ev:6,act:166,pm:472,r100:1.271,rAnn:0.610,free:96.4,neg:16.7,cure:5,hd:1,yr:2021},
+  {ev:6,act:170,pm:474,r100:1.267,rAnn:0.608,free:97.1,neg:33.3,cure:2,hd:4,yr:2022},
+  {ev:5,act:171,pm:487,r100:1.027,rAnn:0.493,free:97.1,neg:20.0,cure:4,hd:1,yr:2022},
+  {ev:5,act:171,pm:491,r100:1.018,rAnn:0.489,free:97.1,neg:0,cure:5,hd:0,yr:2022},
+  {ev:5,act:171,pm:477,r100:1.049,rAnn:0.504,free:97.7,neg:0,cure:5,hd:0,yr:2022},
+  {ev:5,act:164,pm:445,r100:1.125,rAnn:0.541,free:97.0,neg:0,cure:3,hd:2,yr:2023},
+  {ev:7,act:163,pm:466,r100:1.501,rAnn:0.720,free:96.3,neg:28.6,cure:5,hd:2,yr:2023},
+  {ev:4,act:163,pm:472,r100:0.848,rAnn:0.407,free:97.5,neg:0,cure:3,hd:1,yr:2023},
+  {ev:1,act:167,pm:480,r100:0.208,rAnn:0.100,free:99.4,neg:0,cure:1,hd:0,yr:2023},
+  {ev:6,act:167,pm:479,r100:1.253,rAnn:0.601,free:96.4,neg:16.7,cure:6,hd:0,yr:2024},
+  {ev:6,act:172,pm:492,r100:1.219,rAnn:0.585,free:96.5,neg:50.0,cure:6,hd:0,yr:2024},
+  {ev:6,act:174,pm:502,r100:1.196,rAnn:0.574,free:96.6,neg:0,cure:5,hd:0,yr:2024},
+  {ev:7,act:173,pm:490,r100:1.429,rAnn:0.686,free:96.0,neg:0,cure:6,hd:1,yr:2024},
+  {ev:4,act:172,pm:489,r100:0.817,rAnn:0.392,free:97.7,neg:0,cure:3,hd:1,yr:2025},
+  {ev:7,act:174,pm:500,r100:1.401,rAnn:0.673,free:96.0,neg:14.3,cure:5,hd:2,yr:2025},
+  {ev:5,act:172,pm:481,r100:1.039,rAnn:0.499,free:97.1,neg:0,cure:2,hd:3,yr:2025},
+  {ev:4,act:162,pm:467,r100:0.857,rAnn:0.411,free:97.5,neg:0,cure:4,hd:0,yr:2025},
+];
+const yrColors={2021:'rgba(24,95,165,.55)',2022:'rgba(59,109,17,.5)',2023:'rgba(136,135,128,.55)',2024:'rgba(186,117,23,.55)',2025:'rgba(83,74,183,.55)'};
+const yrBorders={2021:'#185FA5',2022:'#3B6D11',2023:'#5F5E5A',2024:'#BA7517',2025:'#534AB7'};
+
+new Chart(document.getElementById('qtrChart'),{
+  type:'bar',
+  data:{labels:qLabels,datasets:[{
+    data:q100,
+    backgroundColor:qData.map(d=>yrColors[d.yr]),
+    borderColor:qData.map(d=>yrBorders[d.yr]),
+    borderWidth:1.5,borderRadius:3
+  }]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+    tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.y.toFixed(3)} ep/100pm`}}},
+    scales:{y:{min:0,max:2.0,ticks:{callback:v=>v.toFixed(2),font:{size:9.5}},grid:{color:'rgba(128,128,128,.1)'},title:{display:true,text:'ep/100人月',font:{size:10}}},
+      x:{ticks:{font:{size:8.5},maxRotation:45,autoSkip:false},grid:{display:false}}}}
+});
+
+const qtbl=document.getElementById('qtbl');
+qLabels.forEach((l,i)=>{
+  const d=qData[i];
+  const annOk=d.rAnn<=0.40;
+  const negOk=d.neg<15||d.neg===0;
+  const negStr=d.neg===0?'0%':`${d.neg.toFixed(1)}%`;
+  const negCls=d.neg>=30?'rc':d.neg>=15?'wc':'pc';
+  qtbl.innerHTML+=`<tr class="${d.r100<0.5?'qbest':''}">
+    <td>${l}</td><td>${d.ev}</td><td>${d.act}</td>
+    <td class="${d.r100>1.4?'wc':d.r100<0.5?'pc':''}">${d.r100.toFixed(3)}</td>
+    <td class="${annOk?'pc':'rc'}">${d.rAnn.toFixed(3)}</td>
+    <td>${annOk?'✓':'✗'}</td>
+    <td class="${d.free>=99?'pc':''}">${d.free.toFixed(1)}%</td>
+    <td class="${negCls}">${negStr}</td>
+    <td>${negOk?'✓':'✗'}</td>
+    <td>${d.cure}</td><td>${d.hd}</td>
+  </tr>`;
+});
+
+new Chart(document.getElementById('negChart'),{
+  type:'bar',
+  data:{labels:yrs,datasets:[
+    {data:[31.8,14.3,11.8,16.0,5.0],
+      backgroundColor:['rgba(163,45,45,.45)','rgba(59,109,17,.35)','rgba(59,109,17,.45)','rgba(186,117,23,.45)','rgba(59,109,17,.55)'],
+      borderColor:['#A32D2D','#3B6D11','#3B6D11','#BA7517','#3B6D11'],
+      borderWidth:2,borderRadius:4,label:'培養陰性率%'},
+    {type:'line',data:Array(5).fill(15),borderColor:'rgba(163,45,45,.6)',borderDash:[4,3],borderWidth:1.5,pointRadius:0,fill:false}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+    tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.y.toFixed(1)}%`}}},
+    scales:{y:{min:0,max:40,ticks:{callback:v=>v+'%',font:{size:10}},grid:{color:'rgba(128,128,128,.1)'},title:{display:true,text:'陰性率%',font:{size:10}}},
+      x:{ticks:{font:{size:11}},grid:{display:false}}}}
+});
+
+new Chart(document.getElementById('bugChart'),{
+  type:'bar',
+  data:{labels:yrs,datasets:[
+    {label:'G(+)',data:[10,10,12,14,9],backgroundColor:'rgba(24,95,165,.75)',borderRadius:{topLeft:0,topRight:0}},
+    {label:'G(−)',data:[5,7,3,7,9],backgroundColor:'rgba(29,158,117,.75)'},
+    {label:'培養陰性',data:[7,3,2,4,1],backgroundColor:'rgba(136,135,128,.65)'},
+    {label:'黴菌/其他',data:[1,1,0,0,1],backgroundColor:'rgba(163,45,45,.6)',borderRadius:{topLeft:3,topRight:3}},
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10,padding:8}}},
+    scales:{x:{stacked:true,ticks:{font:{size:11}},grid:{display:false}},y:{stacked:true,ticks:{stepSize:5,font:{size:10}},grid:{color:'rgba(128,128,128,.1)'}}}}
+});
+
+const bugs=[['S. aureus (G+)',16,'#185FA5'],['E. coli (G−)',13,'#1D9E75'],['Other Strep. (G+)',11,'#378ADD'],['S. epidermidis (G+)',9,'#5DCAA5'],['K. pneumoniae (G−)',6,'#0F6E56'],['S. viridians (G+)',5,'#85B7EB'],['S. haemolyticus (G+)',5,'#9FE1CB'],['Others',8,'#888780']];
+const bbEl=document.getElementById('bugBars');
+bugs.forEach(([l,v,c])=>{
+  bbEl.innerHTML+=`<div class="bar-row"><span class="bar-lbl">${l}</span><div class="bar-track"><div class="bar-fill" style="width:${v/16*100}%;background:${c}"></div></div><span class="bar-num">${v}</span></div>`;
+});
+
+new Chart(document.getElementById('outcomeChart'),{
+  type:'bar',
+  data:{labels:yrs,datasets:[
+    {label:'Medical cure',data:[17,16,12,23,14],backgroundColor:'rgba(59,109,17,.75)',borderRadius:{topLeft:0,topRight:0}},
+    {label:'HD transfer',data:[6,5,5,1,6],backgroundColor:'rgba(186,117,23,.75)'},
+    {label:'Catheter removal / 死亡',data:[0,0,0,1,0],backgroundColor:'rgba(163,45,45,.65)',borderRadius:{topLeft:3,topRight:3}},
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+    scales:{x:{stacked:true,ticks:{font:{size:11}},grid:{display:false}},y:{stacked:true,ticks:{stepSize:5,font:{size:10}},grid:{color:'rgba(128,128,128,.1)'}}}}
+});
+</script>
