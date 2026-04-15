@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>腹膜透析腹膜炎 ISPD 品質報告（近5年）</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --green:  #3B6D11; --green-bg: rgba(59,109,17,0.08);
+    --red:    #A32D2D; --red-bg:   rgba(163,45,45,0.08);
+    --blue:   #185FA5;
+    --orange: #D85A30;
+    --amber:  #BA7517; --amber-bg: rgba(186,117,23,0.08);
+    --gray:   #4A5568; --light:    #F7F8FA;
+    --border: #E2E8F0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #EEF2F7; color: #2D3748; font-size: 14px; }
+
+  /* ── Header ── */
+  .report-header {
+    background: linear-gradient(135deg, #1a3a5c 0%, #185FA5 60%, #2980B9 100%);
+    color: #fff; padding: 32px 40px 24px;
+  }
+  .report-header h1 { font-size: 22px; font-weight: 700; letter-spacing: 0.5px; }
+  .report-header .sub { font-size: 13px; opacity: 0.85; margin-top: 6px; }
+  .report-meta { display: flex; gap: 24px; margin-top: 14px; font-size: 12px; opacity: 0.9; }
+  .report-meta span { background: rgba(255,255,255,0.15); padding: 4px 12px; border-radius: 20px; }
+
+  /* ── Layout ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px; }
+  section { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); margin-bottom: 24px; overflow: hidden; }
+  .section-title { font-size: 15px; font-weight: 700; color: var(--blue); padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+  .section-body { padding: 20px 24px; }
+
+  /* ── KPI Cards ── */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; padding: 20px 24px; }
+  .kpi-card { border-radius: 10px; padding: 18px 20px; border-left: 5px solid; }
+  .kpi-card.green  { background: var(--green-bg);  border-color: var(--green); }
+  .kpi-card.red    { background: var(--red-bg);    border-color: var(--red);   }
+  .kpi-card.amber  { background: var(--amber-bg);  border-color: var(--amber); }
+  .kpi-card.blue   { background: rgba(24,95,165,0.07); border-color: var(--blue); }
+  .kpi-label  { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray); margin-bottom: 6px; }
+  .kpi-value  { font-size: 28px; font-weight: 800; line-height: 1; }
+  .kpi-card.green .kpi-value { color: var(--green); }
+  .kpi-card.red   .kpi-value { color: var(--red);   }
+  .kpi-card.amber .kpi-value { color: var(--amber); }
+  .kpi-card.blue  .kpi-value { color: var(--blue);  }
+  .kpi-unit   { font-size: 11px; color: var(--gray); margin-top: 4px; }
+  .kpi-badge  { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 10px; margin-top: 8px; font-weight: 600; }
+  .badge-pass { background: var(--green); color: #fff; }
+  .badge-warn { background: var(--amber); color: #fff; }
+  .badge-fail { background: var(--red);   color: #fff; }
+  .badge-info { background: var(--blue);  color: #fff; }
+
+  /* ── Table ── */
+  .ispd-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .ispd-table th { background: #F1F5F9; color: var(--gray); font-weight: 600; padding: 10px 14px; text-align: left; border-bottom: 2px solid var(--border); }
+  .ispd-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .ispd-table tr:last-child td { border-bottom: none; }
+  .ispd-table tr:hover td { background: #F8FAFC; }
+  .status-icon { font-size: 16px; }
+  .val-pass { color: var(--green); font-weight: 700; }
+  .val-warn { color: var(--amber); font-weight: 700; }
+  .val-fail { color: var(--red);   font-weight: 700; }
+  .val-info { color: var(--blue);  }
+
+  /* ── Charts ── */
+  .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px 24px; }
+  .chart-box { }
+  .chart-title { font-size: 12px; font-weight: 700; color: var(--gray); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .chart-wrap { position: relative; height: 220px; }
+  .chart-full { padding: 20px 24px; }
+  .chart-full .chart-wrap { height: 200px; }
+
+  /* ── PDCA ── */
+  .pdca-summary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 10px; margin-bottom: 20px; }
+  .pdca-indicator-badge { border-radius: 8px; padding: 10px 14px; font-size: 12px; }
+  .pdca-indicator-badge.critical { background: var(--red-bg); border: 1px solid var(--red); }
+  .pdca-indicator-badge.warning  { background: var(--amber-bg); border: 1px solid var(--amber); }
+  .pdca-indicator-badge .ind-name { font-weight: 700; margin-bottom: 4px; }
+  .pdca-indicator-badge .ind-vals { font-size: 11px; color: var(--gray); }
+  details { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
+  details summary { background: #F8FAFC; padding: 12px 16px; cursor: pointer; font-weight: 600; font-size: 13px; list-style: none; display: flex; align-items: center; gap: 8px; }
+  details summary::-webkit-details-marker { display: none; }
+  details[open] summary { background: #EEF4FF; color: var(--blue); border-bottom: 1px solid var(--border); }
+  .pdca-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px; }
+  .pdca-card { border-radius: 8px; padding: 14px 16px; border-left: 4px solid; }
+  .pdca-card.plan  { background: #EBF4FF; border-color: var(--blue); }
+  .pdca-card.do    { background: #EDFAED; border-color: var(--green); }
+  .pdca-card.check { background: #FFFBE6; border-color: var(--amber); }
+  .pdca-card.act   { background: #FFF0F0; border-color: var(--red); }
+  .pdca-card h4 { font-size: 12px; font-weight: 800; margin-bottom: 8px; }
+  .pdca-card.plan  h4 { color: var(--blue);  }
+  .pdca-card.do    h4 { color: var(--green); }
+  .pdca-card.check h4 { color: var(--amber); }
+  .pdca-card.act   h4 { color: var(--red);   }
+  .pdca-card ul { padding-left: 14px; }
+  .pdca-card li { font-size: 12px; margin-bottom: 5px; line-height: 1.5; }
+  .all-pass { background: var(--green-bg); border: 1px solid var(--green); border-radius: 8px; padding: 20px; text-align: center; font-weight: 700; color: var(--green); font-size: 15px; }
+
+  /* ── Footer ── */
+  .report-footer { font-size: 11px; color: #888; padding: 20px 24px; line-height: 1.8; border-top: 1px solid var(--border); }
+
+  @media (max-width: 700px) {
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .chart-grid { grid-template-columns: 1fr; }
+    .pdca-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<div class="report-header">
+  <h1>🩺 腹膜透析腹膜炎 ISPD 2022 品質監控報告</h1>
+  <div class="sub">依據 ISPD 2022 Peritonitis Guideline（Li et al., PDI 2022;42:110–153）</div>
+  <div class="report-meta">
+    <span>📅 分析期間：2021–2025（近5年）</span>
+    <span>🏥 報告日期：2026-04-13</span>
+    <span>👥 患者總數：998 例</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ── KPI Cards ── -->
+<section>
+  <div class="kpi-grid">
+    <div class="kpi-card green">
+      <div class="kpi-label">近5年總腹膜炎事件</div>
+      <div class="kpi-value">110</div>
+      <div class="kpi-unit">episodes（2021–2025）</div>
+      <span class="kpi-badge badge-info">📊 監測中</span>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">整體腹膜炎發生率</div>
+      <div class="kpi-value">0.130</div>
+      <div class="kpi-unit">ep / patient-year（847.1 pt-yr）</div>
+      <span class="kpi-badge badge-pass">✅ 達標 &lt;0.40</span>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">無腹膜炎患者比例（均值）</div>
+      <div class="kpi-value">89.8%</div>
+      <div class="kpi-unit">近5年平均（各年均 >80%）</div>
+      <span class="kpi-badge badge-pass">✅ 達標 &gt;80%</span>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-label">培養陰性率（近5年）</div>
+      <div class="kpi-value">14.5%</div>
+      <div class="kpi-unit">16 / 110 episodes</div>
+      <span class="kpi-badge badge-pass">✅ 達標 &lt;15%</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── ISPD Indicators Table ── -->
+<section>
+  <div class="section-title">📋 ISPD 2022 官方品質指標達標總表（分析期間：2021–2025）</div>
+  <div class="section-body">
+    <table class="ispd-table">
+      <thead>
+        <tr>
+          <th>#</th><th>品質指標</th><th>近5年數值</th><th>ISPD 目標</th><th>證據等級</th><th>狀態</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td><td>整體腹膜炎發生率</td>
+          <td class="val-pass">0.130 ep/pt-yr</td>
+          <td>&lt; 0.40</td><td>1C</td>
+          <td><span class="status-icon">✅</span> 達標</td>
+        </tr>
+        <tr>
+          <td>2</td><td>無腹膜炎患者比例（年均）</td>
+          <td class="val-pass">89.8%</td>
+          <td>&gt; 80%</td><td>2C</td>
+          <td><span class="status-icon">✅</span> 達標</td>
+        </tr>
+        <tr>
+          <td>3</td><td>培養陰性率</td>
+          <td class="val-pass">14.5%（16/110）</td>
+          <td>&lt; 15%</td><td>1C</td>
+          <td><span class="status-icon">✅</span> 達標（臨界）</td>
+        </tr>
+        <tr>
+          <td>4</td><td>植管後30天腹膜炎率</td>
+          <td class="val-pass">0.7%（1/146）</td>
+          <td>&lt; 5%</td><td>本地監測</td>
+          <td><span class="status-icon">✅</span> 達標</td>
+        </tr>
+        <tr>
+          <td>5</td><td>Medical cure 比例</td>
+          <td class="val-info">80.0%（88/110）</td>
+          <td>監測追蹤</td><td>—</td>
+          <td><span class="status-icon">📊</span> 監測中</td>
+        </tr>
+        <tr>
+          <td>6</td><td>Relapsing 比例</td>
+          <td class="val-info">0.9%（1/110）</td>
+          <td>監測追蹤</td><td>1C</td>
+          <td><span class="status-icon">📊</span> 監測中</td>
+        </tr>
+        <tr>
+          <td>7</td><td>Recurrent 比例</td>
+          <td class="val-info">2.7%（3/110）</td>
+          <td>監測追蹤</td><td>1C</td>
+          <td><span class="status-icon">📊</span> 監測中</td>
+        </tr>
+        <tr>
+          <td>8</td><td>Repeat 比例</td>
+          <td class="val-info">0.0%（0/110）</td>
+          <td>監測追蹤</td><td>1C</td>
+          <td><span class="status-icon">📊</span> 監測中</td>
+        </tr>
+        <tr>
+          <td>9</td><td>拔管比例</td>
+          <td class="val-info">0.9%（1/110）</td>
+          <td>監測追蹤</td><td>—</td>
+          <td><span class="status-icon">📊</span> 監測中</td>
+        </tr>
+        <tr>
+          <td>10</td><td>轉血液透析比例</td>
+          <td class="val-info">19.1%（21/110）</td>
+          <td>監測追蹤</td><td>—</td>
+          <td><span class="status-icon">📊</span> 監測中</td>
+        </tr>
+        <tr>
+          <td>11</td><td>腹膜炎相關死亡比例</td>
+          <td class="val-pass">0.0%（0/110）</td>
+          <td>監測追蹤</td><td>—</td>
+          <td><span class="status-icon">📊</span> 監測中</td>
+        </tr>
+        <tr>
+          <td>12</td><td>菌種特異性（前3大）</td>
+          <td class="val-info">G(+) 59ep｜G(−) 32ep｜培養陰性 16ep</td>
+          <td>監測追蹤</td><td>—</td>
+          <td><span class="status-icon">📊</span> 監測中</td>
+        </tr>
+        <tr>
+          <td>13</td><td>首次腹膜炎平均時距</td>
+          <td class="val-info">需逐案計算</td>
+          <td>監測追蹤</td><td>—</td>
+          <td><span class="status-icon">📊</span> 監測中</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── Charts Row 1 ── -->
+<section>
+  <div class="section-title">📈 Figure 1 & 2：逐年腹膜炎發生率 & 無腹膜炎患者比例趨勢（2021–2025）</div>
+  <div class="chart-grid">
+    <div class="chart-box">
+      <div class="chart-title">逐年腹膜炎發生率（ep/patient-year）</div>
+      <div class="chart-wrap"><canvas id="chartYearRate"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">逐年無腹膜炎患者比例（%）</div>
+      <div class="chart-wrap"><canvas id="chartFree"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Charts Row 2 ── -->
+<section>
+  <div class="section-title">🔬 Figure 3 & 4：治療結果分布 & 菌種分布（2021–2025）</div>
+  <div class="chart-grid">
+    <div class="chart-box">
+      <div class="chart-title">治療結果分布</div>
+      <div class="chart-wrap"><canvas id="chartOutcome"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">致病菌大類分布</div>
+      <div class="chart-wrap"><canvas id="chartOrg"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Figure 5: Organism Details ── -->
+<section>
+  <div class="section-title">🦠 Figure 5：前10大致病菌細類分布（近5年）</div>
+  <div class="chart-full">
+    <div class="chart-wrap" style="height:240px"><canvas id="chartOrgDetail"></canvas></div>
+  </div>
+</section>
+
+<!-- ── PDCA Section ── -->
+<section id="pdca">
+  <div class="section-title">🔄 Section 10：品質改善 PDCA 行動計畫（依 2025 年指標成績）</div>
+  <div class="section-body">
+    <p style="font-size:13px; color: var(--gray); margin-bottom:16px;">
+      依據 <strong>2025 年</strong>（近5年最後一年）品質指標評估：發生率 0.121 ep/pt-yr、無腹膜炎比例 89.2%、培養陰性率 5.0%。<br>
+      所有 ISPD 有目標值的指標均達標，監測型指標中「<strong>轉血液透析比例</strong>」（2025年 30.0%）值得持續追蹤。
+    </p>
+
+    <!-- 2025 全達標 -->
+    <div class="all-pass" style="margin-bottom:16px;">
+      ✅ 2025 年所有 ISPD 有目標值的品質指標均達標（發生率 0.121 &lt; 0.40、無腹膜炎 89.2% &gt; 80%、培養陰性率 5.0% &lt; 15%、植管後30天感染率 0.7% &lt; 5%）<br>
+      <span style="font-size:13px; font-weight:400; margin-top:6px; display:block;">請持續監測並維持現行操作標準。以下針對監測型高值指標提供行動建議。</span>
+    </div>
+
+    <!-- 轉HD比例追蹤建議 -->
+    <details open>
+      <summary>📊 【監測追蹤】轉血液透析比例｜2025年 30.0%（6/20）— 高於歷年均值</summary>
+      <div class="pdca-grid">
+        <div class="pdca-card plan">
+          <h4>🔵 Plan（計畫）</h4>
+          <ul>
+            <li>回顧 2025 年 6 例轉 HD 個案：分析轉換原因（Refractory、技術失敗、社會因素？）</li>
+            <li>與前4年轉HD率（2021:15.4%、2022:10.5%、2023:11.8%、2024:21.4%）比較趨勢</li>
+            <li>訂定監測目標：維持近5年均值 19.1%，避免持續攀升</li>
+          </ul>
+        </div>
+        <div class="pdca-card do">
+          <h4>🟢 Do（執行）</h4>
+          <ul>
+            <li>初始抗生素覆蓋確認：確保革蘭氏陽性＋陰性雙重覆蓋啟用及時</li>
+            <li>治療反應監測：診斷後 96 小時評估腹透液細胞數，若未下降即升階治療</li>
+            <li>強化高風險患者（多次感染史、老年、DM）追蹤，建立個別化預防計畫</li>
+          </ul>
+        </div>
+        <div class="pdca-card check">
+          <h4>🟡 Check（確認）</h4>
+          <ul>
+            <li>每季統計轉 HD 比例，繪製趨勢圖</li>
+            <li>分類轉換原因：Refractory / Relapsing / 患者意願 / 其他</li>
+            <li>追蹤轉 HD 後患者能否重返 PD（再植管率）</li>
+          </ul>
+        </div>
+        <div class="pdca-card act">
+          <h4>🔴 Act（行動）</h4>
+          <ul>
+            <li>若 Refractory 為主要原因 → 稽核初始抗生素選擇與啟用時效</li>
+            <li>若患者意願為主因 → 加強衛教、解決居家障礙（照護者、設備）</li>
+            <li>將轉 HD 分析結果納入下期 ISPD 年度報告，呈報科部</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>📊 【維持監測】培養陰性率｜近5年 14.5%（臨界值 15%）— 需持續管控</summary>
+      <div class="pdca-grid">
+        <div class="pdca-card plan">
+          <h4>🔵 Plan（計畫）</h4>
+          <ul>
+            <li>雖近5年均值 14.5% 剛好低於 ISPD 目標 15%，2021年單年陰性率較高，需持續監控</li>
+            <li>稽核各年送檢流程：採樣量（50 mL+）、送檢時間、培養瓶種類（需氧+厭氧）</li>
+          </ul>
+        </div>
+        <div class="pdca-card do">
+          <h4>🟢 Do（執行）</h4>
+          <ul>
+            <li>確認雙瓶送檢 SOP 落實率，腹膜炎確診後立即採樣（勿待抗生素啟用後）</li>
+            <li>定期與檢驗科確認培養設備溫度與培養瓶品質</li>
+          </ul>
+        </div>
+        <div class="pdca-card check">
+          <h4>🟡 Check（確認）</h4>
+          <ul>
+            <li>每季計算培養陰性率，維持 &lt;15% 目標</li>
+            <li>追蹤「送檢 SOP 符合率」稽核表</li>
+          </ul>
+        </div>
+        <div class="pdca-card act">
+          <h4>🔴 Act（行動）</h4>
+          <ul>
+            <li>若陰性率回升 &gt;15% → 立即加強護理教育，列為護理品質監測指標</li>
+            <li>若流程符合但仍高 → 諮詢感染科評估特殊菌種（Mycobacterium、Fungal）可能</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<section>
+  <div class="report-footer">
+    <strong>方法說明</strong><br>
+    本報告分析期間：2021-01-01 至 2025-12-31（近5個完整曆年）。患者暴露時間（patient-years）採 clipped 區間計算，每位患者觀察起點取「開始透析日」與「2021-01-01」之較晚者，終點取「退出日」與「2025-12-31」之較早者。整體發生率 = 腹膜炎事件數 ÷ 總 patient-years。無腹膜炎患者比例 = 當年在治患者中未發生腹膜炎者之百分比。培養陰性率 = 陰性培養事件 ÷ 總腹膜炎事件數。Relapsing：前次結束後 ≤28 天，同菌種復發；Recurrent：前次結束後 29–90 天，同菌種；Repeat：≤28 天，異菌種。<br>
+    <strong>資料來源</strong>：腹膜透析患者歷年事件資料.xlsx（總表 998 筆、Peritonitis 工作表）｜<strong>指引依據</strong>：Li PK et al. ISPD Peritonitis Recommendations: 2022 Update. Perit Dial Int. 2022;42(2):110-153.
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<script>
+// ─── Data ───
+const years = [2021, 2022, 2023, 2024, 2025];
+const rates    = [0.157, 0.107, 0.102, 0.164, 0.121];
+const ptYears  = [165.76, 177.52, 166.13, 170.77, 164.95];
+const nEp      = [26, 19, 17, 28, 20];
+const pctFree  = [88.5, 91.0, 92.3, 88.0, 89.2];
+
+const GREEN  = '#3B6D11'; const GREEN_T  = 'rgba(59,109,17,0.18)';
+const RED    = '#A32D2D'; const RED_T    = 'rgba(163,45,45,0.15)';
+const BLUE   = '#185FA5'; const BLUE_T   = 'rgba(24,95,165,0.15)';
+const ORANGE = '#D85A30';
+const AMBER  = '#BA7517'; const AMBER_T  = 'rgba(186,117,23,0.15)';
+
+const commonOpts = {
+  responsive: true, maintainAspectRatio: false,
+  plugins: { legend: { labels: { font: { size: 11 }, boxWidth: 12 } } }
+};
+
+// Fig 1 – Yearly incidence rate
+new Chart(document.getElementById('chartYearRate'), {
+  type: 'bar',
+  data: {
+    labels: years,
+    datasets: [
+      {
+        label: '腹膜炎發生率（ep/pt-yr）',
+        data: rates, backgroundColor: rates.map(r => r >= 0.40 ? RED_T : BLUE_T),
+        borderColor: rates.map(r => r >= 0.40 ? RED : BLUE), borderWidth: 2,
+        yAxisID: 'y'
+      },
+      {
+        type: 'line', label: 'ISPD 目標 (0.40)',
+        data: [0.40,0.40,0.40,0.40,0.40], borderColor: AMBER,
+        borderDash: [6,3], borderWidth: 2, pointRadius: 0, fill: false, yAxisID: 'y'
+      }
+    ]
+  },
+  options: {
+    ...commonOpts,
+    scales: {
+      y: { beginAtZero: true, max: 0.5, ticks: { font:{size:11} },
+           title: { display:true, text:'ep/pt-yr', font:{size:11} } },
+      x: { ticks: { font:{size:11} } }
+    }
+  }
+});
+
+// Fig 2 – % Free
+new Chart(document.getElementById('chartFree'), {
+  type: 'line',
+  data: {
+    labels: years,
+    datasets: [
+      {
+        label: '無腹膜炎患者比例（%）',
+        data: pctFree, borderColor: GREEN, backgroundColor: GREEN_T,
+        borderWidth: 2.5, fill: true, tension: 0.3,
+        pointBackgroundColor: GREEN, pointRadius: 5
+      },
+      {
+        label: 'ISPD 目標 (80%)',
+        data: [80,80,80,80,80], borderColor: AMBER,
+        borderDash: [6,3], borderWidth: 2, pointRadius: 0, fill: false
+      }
+    ]
+  },
+  options: {
+    ...commonOpts,
+    scales: {
+      y: { min:70, max:100, ticks:{font:{size:11}}, title:{display:true,text:'%',font:{size:11}} },
+      x: { ticks:{font:{size:11}} }
+    }
+  }
+});
+
+// Fig 3 – Outcomes
+new Chart(document.getElementById('chartOutcome'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Medical Cure（治癒）','轉血液透析','拔管暫時轉HD'],
+    datasets: [{
+      data: [88, 20, 1],
+      backgroundColor: [GREEN, RED, AMBER], borderWidth: 2, borderColor: '#fff'
+    }]
+  },
+  options: {
+    ...commonOpts,
+    plugins: {
+      legend: { position: 'bottom', labels:{font:{size:11},boxWidth:12} },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} ep (${(ctx.raw/110*100).toFixed(1)}%)` } }
+    }
+  }
+});
+
+// Fig 4 – Organism class
+new Chart(document.getElementById('chartOrg'), {
+  type: 'pie',
+  data: {
+    labels: ['格蘭氏陽性菌','格蘭氏陰性菌','陰性培養','其他/黴菌'],
+    datasets: [{
+      data: [59, 32, 16, 3],
+      backgroundColor: [BLUE, ORANGE, '#6B7280', AMBER], borderWidth: 2, borderColor:'#fff'
+    }]
+  },
+  options: {
+    ...commonOpts,
+    plugins: {
+      legend:{ position:'bottom', labels:{font:{size:11},boxWidth:12} },
+      tooltip:{ callbacks:{ label: ctx => ` ${ctx.label}: ${ctx.raw} ep (${(ctx.raw/110*100).toFixed(1)}%)` } }
+    }
+  }
+});
+
+// Fig 5 – Top organism species
+const orgLabels = ['Other Streptococcus','S. aureus','E. coli','S. epidermidis','No Growth',
+                   'Klebsiella pneumoniae','S. haemolyticus','Streptococcus viridians','Enterococcus',
+                   'Citrobacter species'];
+const orgCounts = [15, 14, 14, 10, 16, 6, 5, 5, 3, 3];
+const orgColors = orgLabels.map((_,i) => [BLUE,BLUE,'#D85A30',BLUE,'#6B7280','#E05C5C',BLUE,BLUE,BLUE,'#D85A30'][i]);
+
+new Chart(document.getElementById('chartOrgDetail'), {
+  type: 'bar',
+  data: {
+    labels: orgLabels,
+    datasets: [{
+      label: 'Episodes',
+      data: orgCounts,
+      backgroundColor: orgColors,
+      borderRadius: 4
+    }]
+  },
+  options: {
+    ...commonOpts,
+    indexAxis: 'y',
+    scales: {
+      x: { beginAtZero:true, ticks:{font:{size:11}}, title:{display:true,text:'Events',font:{size:11}} },
+      y: { ticks:{font:{size:10}} }
+    },
+    plugins: { legend:{display:false} }
+  }
+});
+</script>
+</body>
+</html>
